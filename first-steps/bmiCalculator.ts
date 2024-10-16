@@ -1,4 +1,4 @@
-function calculateBmi(height: number, weight: number): string {
+export function calculateBmi(height: number, weight: number): string {
     const heightInMeters = height / 100;
     const bmi = weight / (heightInMeters * heightInMeters);
 
@@ -12,12 +12,14 @@ function calculateBmi(height: number, weight: number): string {
         return 'Obese';
     }
 }
-  
-const height = Number(process.argv[2]);
-const weight = Number(process.argv[3]);
 
-if (!height || !weight || height <= 0 || weight <= 0) {
-    console.log('Please provide valid height and weight as numbers greater than 0.');
-} else {
-    console.log(calculateBmi(height, weight));
-}  
+if (require.main === module) {
+    const height = Number(process.argv[2]);
+    const weight = Number(process.argv[3]);
+
+    if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+        console.log('Please provide valid height and weight as numbers greater than 0.');
+    } else {
+        console.log(calculateBmi(height, weight));
+    }
+}
