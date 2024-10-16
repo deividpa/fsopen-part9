@@ -1,4 +1,3 @@
-// exerciseCalculator.ts
 import { isNotNumber } from './utils/utils';
 
 interface ExerciseResult {
@@ -11,7 +10,7 @@ interface ExerciseResult {
   average: number;
 }
 
-const calculateExercises = (dailyHours: number[], target: number): ExerciseResult => {
+export const calculateExercises = (dailyHours: number[], target: number): ExerciseResult => {
   const periodLength = dailyHours.length;
   const trainingDays = dailyHours.filter(hours => hours > 0).length;
   const totalHours = dailyHours.reduce((acc, hours) => acc + hours, 0);
@@ -44,20 +43,22 @@ const calculateExercises = (dailyHours: number[], target: number): ExerciseResul
   };
 };
 
-const args = process.argv.slice(2);
+if(require.main === module) {
+  const args = process.argv.slice(2);
 
-const target = Number(args[0]);
-const dailyHours = args.slice(1).map(Number);
+  const target = Number(args[0]);
+  const dailyHours = args.slice(1).map(Number);
 
-if (isNotNumber(target)) {
-  console.log("Error: The target value must be a valid number.");
-  process.exit(1);
+  if (isNotNumber(target)) {
+    console.log("Error: The target value must be a valid number.");
+    process.exit(1);
+  }
+
+  if (dailyHours.some(isNotNumber)) {
+    console.log("Error: All daily exercise hours must be valid numbers.");
+    process.exit(1);
+  }
+
+  const result = calculateExercises(dailyHours, target);
+  console.log(result);
 }
-
-if (dailyHours.some(isNotNumber)) {
-  console.log("Error: All daily exercise hours must be valid numbers.");
-  process.exit(1);
-}
-
-const result = calculateExercises(dailyHours, target);
-console.log(result);
