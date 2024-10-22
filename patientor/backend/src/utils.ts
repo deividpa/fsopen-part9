@@ -9,7 +9,6 @@ export const PatientSchema = z.object({
     occupation: z.string(),
 });
 
-export type NewPatient = z.infer<typeof PatientSchema>;
 
 // const isString = (text: unknown): text is string => {
 //     return typeof text === 'string' || text instanceof String;
