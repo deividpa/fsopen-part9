@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
 import patientService from '../services/patientService';
 import { NonSensitivePatient } from '../types';
-import toNewPatient from '../utils';
+import { PatientSchema } from '../utils';
+import { v1 as uuid } from 'uuid';
+import { z } from 'zod';
 
 const router = express.Router();
 
@@ -11,14 +13,22 @@ router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
 
 router.post('/', (req: Request, res: Response) => {
   try {
-    const newPatient = toNewPatient(req.body);
+    const newPatientData = PatientSchema.parse(req.body);
+
+    const newPatient = {
+        id: uuid(),
+        ...newPatientData,
+    };
+
     const addedPatient = patientService.addPatient(newPatient);
-    res.json(addedPatient);
-  } catch (e) {
-    if (e instanceof Error) {
-      res.status(400).send(e.message);
+    res.status(201).json(addedPatient);
+} catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+        res.status(400).send({ error: error.issues });
+    } else {
+        res.status(400).send({ error: 'unknown error' });
     }
-  }
+}
 });
 
 export default router;
