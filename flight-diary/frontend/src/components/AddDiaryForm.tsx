@@ -43,30 +43,117 @@ const AddDiaryForm = ({ pushNewDiary }: { pushNewDiary: (newDiary: DiaryEntry) =
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       <form onSubmit={addDiary}>
         <div>
-          Date: <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+          <label>Date:</label>
+          <input 
+            type="date" 
+            value={date} 
+            onChange={(e) => setDate(e.target.value)} 
+            required 
+          />
         </div>
+        
         <div>
-          Weather:
-          <select value={weather} onChange={(e) => setWeather(e.target.value)}>
-            <option value="sunny">Sunny</option>
-            <option value="rainy">Rainy</option>
-            <option value="cloudy">Cloudy</option>
-            <option value="stormy">Stormy</option>
-            <option value="windy">Windy</option>
-          </select>
+          <label>Weather:</label>
+          <div>
+            <label>
+              <input 
+                type="radio" 
+                value="sunny" 
+                checked={weather === 'sunny'} 
+                onChange={(e) => setWeather(e.target.value)} 
+              />
+              Sunny
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="rainy" 
+                checked={weather === 'rainy'} 
+                onChange={(e) => setWeather(e.target.value)} 
+              />
+              Rainy
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="cloudy" 
+                checked={weather === 'cloudy'} 
+                onChange={(e) => setWeather(e.target.value)} 
+              />
+              Cloudy
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="stormy" 
+                checked={weather === 'stormy'} 
+                onChange={(e) => setWeather(e.target.value)} 
+              />
+              Stormy
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="windy" 
+                checked={weather === 'windy'} 
+                onChange={(e) => setWeather(e.target.value)} 
+              />
+              Windy
+            </label>
+          </div>
         </div>
+        
         <div>
-          Visibility:
-          <select value={visibility} onChange={(e) => setVisibility(e.target.value)}>
-            <option value="great">Great</option>
-            <option value="good">Good</option>
-            <option value="ok">Ok</option>
-            <option value="poor">Poor</option>
-          </select>
+          <label>Visibility:</label>
+          <div>
+            <label>
+              <input 
+                type="radio" 
+                value="great" 
+                checked={visibility === 'great'} 
+                onChange={(e) => setVisibility(e.target.value)} 
+              />
+              Great
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="good" 
+                checked={visibility === 'good'} 
+                onChange={(e) => setVisibility(e.target.value)} 
+              />
+              Good
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="ok" 
+                checked={visibility === 'ok'} 
+                onChange={(e) => setVisibility(e.target.value)} 
+              />
+              Ok
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="poor" 
+                checked={visibility === 'poor'} 
+                onChange={(e) => setVisibility(e.target.value)} 
+              />
+              Poor
+            </label>
+          </div>
         </div>
+        
         <div>
-          Comment: <input type="text" value={comment} onChange={(e) => setComment(e.target.value)} />
+          <label>Comment:</label>
+          <input 
+            type="text" 
+            value={comment} 
+            onChange={(e) => setComment(e.target.value)} 
+          />
         </div>
+        
         <button type="submit">Add Diary Entry</button>
       </form>
     </div>
