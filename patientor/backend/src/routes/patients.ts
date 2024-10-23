@@ -11,6 +11,15 @@ router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
   res.send(patientService.getNonSensitivePatients());
 });
 
+router.get('/:id', (req: Request, res: Response) => {
+    const patient = patientService.getPatientById(req.params.id);
+    if (patient) {
+      res.json(patient);
+    } else {
+      res.status(404).send({ error: "Patient not found" });
+    }
+});
+
 router.post('/', (req: Request, res: Response) => {
   try {
     const newPatientData = PatientSchema.parse(req.body);
@@ -30,5 +39,6 @@ router.post('/', (req: Request, res: Response) => {
     }
 }
 });
+
 
 export default router;
