@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography, CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import patientService from "../services/patients";
-import { Patient, Entry } from "../types";
+import { Patient, Entry, Diagnosis } from "../types";
 
 const PatientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [diagnoses, setDiagnoses] = useState<{ [code: string]: Diagnosis }>({});
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -22,7 +23,21 @@ const PatientDetailPage = () => {
       }
     };
 
+    const fetchDiagnoses = async () => {
+      try {
+        const diagnosesData = await patientService.getDiagnoses();
+        const diagnosesMap = diagnosesData.reduce((acc: { [code: string]: Diagnosis }, diagnosis: Diagnosis) => {
+          acc[diagnosis.code] = diagnosis;
+          return acc;
+        }, {});
+        setDiagnoses(diagnosesMap);
+      } catch (err) {
+        console.error("Error fetching diagnoses", err);
+      }
+    };
+
     fetchPatient();
+    fetchDiagnoses();
   }, [id]);
 
   if (loading) {
@@ -39,16 +54,28 @@ const PatientDetailPage = () => {
 
   return (
     <Box>
-      <Typography variant="h4">{patient.name}</Typography>
-      <Typography variant="h6">Gender: {patient.gender}</Typography>
-      <Typography variant="h6">SSN: {patient.ssn}</Typography>
-      <Typography variant="h6">Occupation: {patient.occupation}</Typography>
-      <Typography variant="h6">Date of Birth: {patient.dateOfBirth}</Typography>
-      <Typography variant="h6">Entries:</Typography>
+      <Typography variant="h4">{patient.name} {patient.gender === 'male' ? '♂' : '♀'}</Typography>
+      <Typography>ssn: {patient.ssn}</Typography>
+      <Typography>occupation: {patient.occupation}</Typography>
+      <Typography variant="h6" style={{ marginTop: '1em' }}>entries</Typography>
       {patient.entries.map((entry: Entry) => (
-        <Box key={entry.id}>
-          <Typography variant="h6">{entry.type}</Typography>
-          <Typography>{entry.description}</Typography>
+        <Box key={entry.id} style={{ marginBottom: '1em' }}>
+          <Typography variant="body1">
+            <strong>{entry.date}</strong> {entry.description}
+          </Typography>
+          {entry.diagnosisCodes && (
+            <List>
+              {entry.diagnosisCodes.map(code => (
+                <ListItem key={code}>
+                  <ListItemText>
+                    <Typography component="span" variant="body2">
+                      {code} {diagnoses[code]?.name && ` - ${diagnoses[code].name}`}
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+              ))}
+            </List>
+          )}
         </Box>
       ))}
     </Box>
