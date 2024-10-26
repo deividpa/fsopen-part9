@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import patientService from '../services/patientService';
 import { NonSensitivePatient } from '../types';
-import { PatientSchema } from '../utils';
+import { PatientSchema, toNewEntry } from '../utils';
 import { v1 as uuid } from 'uuid';
 import { z } from 'zod';
 
@@ -39,6 +39,25 @@ router.post('/', (req: Request, res: Response) => {
     }
 }
 });
+
+router.post('/:id/entries', (req: Request, res: Response) => {
+  try {
+    const patient = patientService.getPatientById(req.params.id);
+
+    if (!patient) {
+      res.status(404).send({ error: 'Patient not found' });
+    } else {
+      const newEntry = toNewEntry(req.body);
+      const addedEntry = patientService.addEntry(patient, newEntry);
+      res.status(201).json(addedEntry);
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).send({ error: error.message });
+    }
+  }
+});
+
 
 
 export default router;
