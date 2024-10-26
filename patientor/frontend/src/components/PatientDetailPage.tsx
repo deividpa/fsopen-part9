@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, CircularProgress, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import patientService from "../services/patients";
-import { Patient, Entry, Diagnosis } from "../types";
+import { Patient, Diagnosis, Entry } from "../types";
+import PatientDetails from "./PatientListPage/PatientDetails";
 
 const PatientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [diagnoses, setDiagnoses] = useState<{ [code: string]: Diagnosis }>({});
 
   useEffect(() => {
@@ -59,23 +61,8 @@ const PatientDetailPage = () => {
       <Typography>occupation: {patient.occupation}</Typography>
       <Typography variant="h6" style={{ marginTop: '1em' }}>entries</Typography>
       {patient.entries.map((entry: Entry) => (
-        <Box key={entry.id} style={{ marginBottom: '1em' }}>
-          <Typography variant="body1">
-            <strong>{entry.date}</strong> {entry.description}
-          </Typography>
-          {entry.diagnosisCodes && (
-            <List>
-              {entry.diagnosisCodes.map(code => (
-                <ListItem key={code}>
-                  <ListItemText>
-                    <Typography component="span" variant="body2">
-                      {code} {diagnoses[code]?.name && ` - ${diagnoses[code].name}`}
-                    </Typography>
-                  </ListItemText>
-                </ListItem>
-              ))}
-            </List>
-          )}
+        <Box key={entry.id} style={{ marginBottom: '1em', border: '1px solid black', padding: '1em' }}>
+          <PatientDetails entry={entry} />
         </Box>
       ))}
     </Box>
