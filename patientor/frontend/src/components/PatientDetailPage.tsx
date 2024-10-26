@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, CircularProgress } from '@mui/material';
 import patientService from "../services/patients";
-import { Patient } from "../types";
+import { Patient, Entry } from "../types";
 
 const PatientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -44,6 +44,13 @@ const PatientDetailPage = () => {
       <Typography variant="h6">SSN: {patient.ssn}</Typography>
       <Typography variant="h6">Occupation: {patient.occupation}</Typography>
       <Typography variant="h6">Date of Birth: {patient.dateOfBirth}</Typography>
+      <Typography variant="h6">Entries:</Typography>
+      {patient.entries.map((entry: Entry) => (
+        <Box key={entry.id}>
+          <Typography variant="h6">{entry.type}</Typography>
+          <Typography>{entry.description}</Typography>
+        </Box>
+      ))}
     </Box>
   );
 };

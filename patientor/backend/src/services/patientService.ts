@@ -1,3 +1,4 @@
+// import patients from '../data/patients';
 import patients from '../data/patients';
 import { Entry, NewPatient } from '../types';
 import { Patient, NonSensitivePatient } from '../types';
